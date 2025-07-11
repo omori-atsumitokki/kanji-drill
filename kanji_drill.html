@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>漢字ドリル - 手書き練習（2級）</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="manifest" href="manifest.json">
   <style>
     html, body {
@@ -14,6 +14,9 @@
       touch-action: none;
       font-family: sans-serif;
       background: #fff8dc;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
     }
 
     header {
@@ -51,6 +54,9 @@
       background: #fff;
       touch-action: none;
       margin-top: 10px;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
     }
 
     button {
@@ -149,6 +155,8 @@
 
     canvas.addEventListener("pointerup", () => drawing = false);
     canvas.addEventListener("pointerleave", () => drawing = false);
+
+    document.addEventListener('gesturestart', e => e.preventDefault());
 
     showQuestion();
   </script>
