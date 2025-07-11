@@ -1,1 +1,156 @@
-#漢字ドリル
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>漢字ドリル - 手書き練習（2級）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      touch-action: none;
+      font-family: sans-serif;
+      background: #fff8dc;
+    }
+
+    header {
+      background: #deb887;
+      padding: 10px 0;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 10px;
+      box-sizing: border-box;
+      height: calc(100% - 60px);
+    }
+
+    .question {
+      font-size: 1.3em;
+      margin: 10px 0;
+    }
+
+    .kanji {
+      font-size: 2em;
+      margin: 10px 0;
+      color: #006400;
+      display: none;
+    }
+
+    canvas {
+      border: 2px solid #333;
+      background: #fff;
+      touch-action: none;
+      margin-top: 10px;
+    }
+
+    button {
+      font-size: 1em;
+      padding: 10px 20px;
+      margin: 5px;
+    }
+
+    .score {
+      margin-top: 10px;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <header>漢字ドリル - 手書き練習（2級）</header>
+  <main>
+    <div class="question" id="question"></div>
+    <div>正解：<span class="kanji" id="kanji"></span></div>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <div>
+      <button onclick="showAnswer()">正解を見る</button>
+      <button onclick="nextQuestion()">次の問題へ</button>
+      <button onclick="clearCanvas()">書き直す</button>
+    </div>
+    <div class="score" id="score"></div>
+  </main>
+
+  <script>
+    const questions = [
+      { reading: "ゆううつ", kanji: "憂鬱" },
+      { reading: "かんしゅう", kanji: "慣習" },
+      { reading: "がいねん", kanji: "概念" },
+      { reading: "むじゅん", kanji: "矛盾" },
+      { reading: "しゅうとく", kanji: "習得" },
+      { reading: "きょうよう", kanji: "教養" },
+      { reading: "せんれん", kanji: "洗練" },
+      { reading: "しょうちゅう", kanji: "焼酎" },
+      { reading: "しゅうしょく", kanji: "就職" },
+      { reading: "きょうい", kanji: "驚異" },
+      { reading: "しんこう", kanji: "信仰" },
+      { reading: "せいさく", kanji: "政策" },
+      { reading: "けいこう", kanji: "傾向" },
+      { reading: "しんちょう", kanji: "慎重" },
+      { reading: "きょうはく", kanji: "脅迫" }
+    ];
+
+    let current = 0;
+
+    function showQuestion() {
+      document.getElementById("question").textContent = `「${questions[current].reading}」の漢字を書いてみよう！`;
+      document.getElementById("kanji").textContent = questions[current].kanji;
+      document.getElementById("kanji").style.display = "none";
+      document.getElementById("score").textContent = `問題 ${current + 1} / ${questions.length}`;
+      clearCanvas();
+    }
+
+    function showAnswer() {
+      document.getElementById("kanji").style.display = "inline";
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        document.getElementById("question").textContent = "お疲れさま！今日の練習は終了！";
+        document.getElementById("kanji").textContent = "";
+        document.getElementById("score").textContent = "";
+        document.getElementById("canvas").style.display = "none";
+        document.querySelectorAll("button").forEach(btn => btn.style.display = "none");
+      }
+    }
+
+    function clearCanvas() {
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+
+    canvas.addEventListener("pointerdown", e => {
+      drawing = true;
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    });
+
+    canvas.addEventListener("pointermove", e => {
+      if (drawing) {
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+      }
+    });
+
+    canvas.addEventListener("pointerup", () => drawing = false);
+    canvas.addEventListener("pointerleave", () => drawing = false);
+
+    showQuestion();
+  </script>
+</body>
+</html>
